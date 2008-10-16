@@ -127,7 +127,7 @@ describe AuxCode do
     foo_class.create :name => 'bacon'
     foo_class.count.should == 2
 
-    foo_class.create! :name => 'foo'
+    foo = foo_class.create! :name => 'foo'
     foo_class.count.should == 3
 
     bar = foo_class.new :name => 'bar'
@@ -137,6 +137,18 @@ describe AuxCode do
     w00t = foo_class.new :name => 'w00t'
     w00t.save!
     foo_class.count.should == 5
+
+    foo_class.find( :first, :conditions => ['name = ?', 'foo'] ).should == foo
+    foo_class.find( :first, :conditions => ['name = ?', 'foo'] ).should_not == foo_category
+
+    foo_class.find_by_name( 'foo' ).should == foo
+    foo_class.find_by_name( 'foo' ).should_not == foo_category
+
+    foo_class.find_all_by_name( 'foo' ).should include(foo)
+    foo_class.find_all_by_name( 'foo' ).should_not include(foo_category)
+
+    foo_class.all.should include(foo)
+    foo_class.all.should_not include(foo_category)
   end
 
 end

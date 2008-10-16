@@ -51,6 +51,20 @@ class AuxCode < ActiveRecord::Base
             count_without_aux_code_scope options
           end
         end
+        def method_missing_with_aux_code_scope name, *args
+          if name.to_s[/^find/]
+            with_scope(:find => { :conditions => ['aux_code_id = ?', self.aux_code_id] }) do
+              method_missing_without_aux_code_scope name, *args
+            end
+          else
+            method_missing_without_aux_code_scope name, *args
+          end
+        end
+        def find_with_aux_code_scope first_or_all, options = {}
+          with_scope(:find => { :conditions => ['aux_code_id = ?', self.aux_code_id] }) do
+            find_without_aux_code_scope first_or_all, options
+          end
+        end
         def create_with_aux_code_scope options = {}
           create_without_aux_code_scope options.merge({ :aux_code_id => self.aux_code_id })
         end
@@ -62,6 +76,8 @@ class AuxCode < ActiveRecord::Base
         end
 
         alias_method_chain :count, :aux_code_scope
+        alias_method_chain :method_missing, :aux_code_scope
+        alias_method_chain :find, :aux_code_scope
         alias_method_chain :create, :aux_code_scope
         alias_method_chain :create!, :aux_code_scope
         alias_method_chain :new, :aux_code_scope

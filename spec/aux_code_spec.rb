@@ -116,4 +116,27 @@ describe AuxCode do
     end
   end
 
+  it 'should be able to get a Class for each category' do
+    foo_category = AuxCode.create! :name => 'foo'
+    foo_class = foo_category.aux_code_class
+    foo_class.count.should == 0
+
+    x = foo_category.codes.create :name => 'chunky'
+    foo_class.count.should == 1
+
+    foo_class.create :name => 'bacon'
+    foo_class.count.should == 2
+
+    foo_class.create! :name => 'foo'
+    foo_class.count.should == 3
+
+    bar = foo_class.new :name => 'bar'
+    bar.save
+    foo_class.count.should == 4
+
+    w00t = foo_class.new :name => 'w00t'
+    w00t.save!
+    foo_class.count.should == 5
+  end
+
 end

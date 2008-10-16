@@ -41,6 +41,37 @@ class AuxCode < ActiveRecord::Base
     aux_code_id == 0
   end
 
+  def aux_code_class
+    klass = Class.new(AuxCode) do
+      class << self
+        attr_accessor :aux_code_id
+
+        def count_with_aux_code_scope options = {}
+          with_scope(:find => { :conditions => ['aux_code_id = ?', self.aux_code_id] }) do
+            count_without_aux_code_scope options
+          end
+        end
+        def create_with_aux_code_scope options = {}
+          create_without_aux_code_scope options.merge({ :aux_code_id => self.aux_code_id })
+        end
+        def create_with_aux_code_scope! options = {}
+          create_without_aux_code_scope! options.merge({ :aux_code_id => self.aux_code_id })
+        end
+        def new_with_aux_code_scope options = {}
+          new_without_aux_code_scope options.merge({ :aux_code_id => self.aux_code_id })
+        end
+
+        alias_method_chain :count, :aux_code_scope
+        alias_method_chain :create, :aux_code_scope
+        alias_method_chain :create!, :aux_code_scope
+        alias_method_chain :new, :aux_code_scope
+      end
+    end
+
+    klass.aux_code_id = self.id # the class needs to know its own aux_code_id
+    klass
+  end
+
   class << self
     def categories
       AuxCode.find_all_by_aux_code_id(0)

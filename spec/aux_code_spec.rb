@@ -36,7 +36,8 @@ describe AuxCode do
 
   it 'should belong to a category (if not a category)' do
     code = AuxCode.create! :name => 'foo'
-    w00t = code.codes.create :name => 'w00t'
+    w00t = code.codes.create! :name => 'w00t'
+    w00t.aux_code.should == code
     w00t.code.should == code
     w00t.category.should == code
     w00t.category.codes.should include(w00t)
@@ -85,6 +86,7 @@ describe AuxCode do
     AuxCode.category( cat ).should == cat
     AuxCode.category( cat.id ).should == cat
     AuxCode.category( cat.name ).should == cat
+    AuxCode.category( cat.name.to_sym ).should == cat
   end
 
   it 'should be able to easily get all values (codes) for a category' do
@@ -165,6 +167,39 @@ describe AuxCode do
     AuxCode.new( :name => 'foo_Bar0lar1Tar5s' ).class_name.should == 'FooBarLarTar'
     AuxCode.new( :name => 'Dog' ).class_name.should == 'Dog'
     AuxCode.new( :name => 'Dogs' ).class_name.should == 'Dog'
+  end
+
+  it 'should be able to get categories and their values using Hash syntax' do
+    foo_category = AuxCode.create! :name => 'foo'
+    bar_category = AuxCode.create! :name => 'bar'
+    chunky = foo_category.codes.create :name => 'chunky'
+    bacon  = foo_category.codes.create :name => 'bacon'
+    
+    AuxCode['foo'].should == foo_category
+    AuxCode[:foo].should == foo_category
+    
+    AuxCode['foo'][:chunky].should == chunky
+    AuxCode[:foo]['chunky'].should == chunky
+  end
+
+  it 'should be able to get categories and their values using indifferent Hash syntax' do
+    foo_category = AuxCode.create! :name => 'foo'
+    bar_category = AuxCode.create! :name => 'bar'
+    chunky = foo_category.codes.create :name => 'chunky'
+    bacon  = foo_category.codes.create :name => 'bacon'
+    
+    AuxCode.foo.should == foo_category
+    AuxCode.foo.chunky.should == chunky
+  end
+
+  it 'should be able to handle names with spaces (with Hash syntax)' do
+    foo_category = AuxCode.create! :name => 'foo'
+    bar_category = AuxCode.create! :name => 'bar'
+    chunky = foo_category.codes.create :name => 'I am Chunky'
+    bacon  = foo_category.codes.create :name => 'Yay for Bacon'
+
+    foo_category.i_am_chunky.should == chunky
+    foo_category[:yay_for_bacon].should == bacon
   end
 
 end

@@ -45,6 +45,30 @@ class AuxCode < ActiveRecord::Base
     name.gsub(/[^[:alpha:]]/,'_').titleize.gsub(' ','').singularize
   end
 
+  def [] attribute_or_code_name
+    if attributes.include?attribute_or_code_name
+      attributes[attribute_or_code_name]
+    else
+      found = codes.select {|c| c.name.to_s =~ /#{attribute_or_code_name}/ }
+      if found.empty? # try case insensitive (sans underscores)
+        found = codes.select {|c| c.name.downcase.gsub('_',' ').to_s =~ 
+          /#{attribute_or_code_name.to_s.downcase.gsub('_',' ')}/ }
+      end
+      found.first if found
+    end
+  end
+
+  def method_missing_with_indifferent_hash_style_values name, *args, &block
+    method_missing_without_indifferent_hash_style_values name, *args, &block
+  rescue NoMethodError => ex
+    begin
+      self[name]
+    rescue
+      raise ex
+    end
+  end
+  alias_method_chain :method_missing, :indifferent_hash_style_values
+
   def aux_code_class
     klass = Class.new(AuxCode) do
       class << self
@@ -124,7 +148,10 @@ class AuxCode < ActiveRecord::Base
       return obj if obj.is_a?AuxCode
       return AuxCode.find(obj) if obj.is_a?Fixnum
       return AuxCode.find_by_name_and_aux_code_id(obj, 0) if obj.is_a?String
+      return AuxCode.find_by_name_and_aux_code_id(obj.to_s, 0) if obj.is_a?Symbol
+      raise "I don't know how to find an AuxCode of type #{ obj.class }"
     end
+    alias [] category
 
     def category_codes category_object_or_id_or_name
       category( category_object_or_id_or_name ).codes
@@ -140,6 +167,23 @@ class AuxCode < ActiveRecord::Base
         Kernel::const_set category.class_name, category.aux_code_class
       end
     end
+
+    def method_missing_with_indifferent_hash_style_values name, *args, &block
+      unless self.respond_to?:aux_code_id # in which case, this is a *derived* class, not AuxCode
+        begin
+          method_missing_without_indifferent_hash_style_values name, *args, &block
+        rescue NoMethodError => ex
+          begin
+            self[name]
+          rescue
+            raise ex
+          end
+        end
+      else
+        method_missing_without_indifferent_hash_style_values name, *args, &block
+      end
+    end
+    alias_method_chain :method_missing, :indifferent_hash_style_values
   end
 
 protected

@@ -57,3 +57,27 @@ full-blown genders table.
 If you want to create all of these classes at once, as constants:
 
     AuxCode.create_classes!
+
+You can also access codes with a Hash-like syntax
+
+    AuxCode['Genders']['Male']
+    AuxCode[:Genders][:Female]
+
+    Gender[:Male]
+
+Or with an Indifferent Hash-like syntax
+
+    AuxCode.genders['Male']
+    AuxCode.genders[:Male]
+    AuxCode.genders.male
+
+    Gender.male
+
+    # these all return the same result
+    Breed.find_by_name 'Golden Retriever'
+    Breed['Golden Retriever']
+    Breed[:golden_retriever]
+    Breed.golden_retriever
+    AuxCodes.breeds.golden_retriever
+
+**TODO** custom fields ... eg. Breed#acronym, Breed#description, Breed#kennel_association_id ...

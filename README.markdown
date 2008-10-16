@@ -5,7 +5,7 @@ Way back when, when I was learning database development, a mentor of mine showed
 a technique that he liked to use to consolidate similar enumeration-esque database tables.
 
 Often, applications have enumeration-esque tables that merely store simply key / value pairs, 
-typically a unique ID and a string.  Take for instance, a 'gender' table:
+typically a unique ID and a string.  Take for instance, a `genders` table:
 
     [  genders   ]
     [id]    [name]
@@ -31,4 +31,29 @@ dirty up our code.  We don't want to always be using the AuxCode object with com
 queries ... we probable want a Gender object that behaves just like it would with a
 full-blown genders table.
 
-    [ to be implemented ]
+    Gender = AuxCode.category('Gender').aux_code_class
+
+    # the Gender class is a full-blown ActiveRecord class
+    # that should behave as if there's actually a `genders` table!
+
+    Gender.find_by_name 'Male'
+
+    Gender.find_or_create_by_name 'Female'
+
+    Gender.create :name => 'Female'
+
+    male = Gender.new :name => 'Male'
+    male.save
+
+    Gender.find :conditions => ['name = ?', 'Male']
+
+    Gender.count
+
+    Gender.codes
+    Gender.code_names
+    Gender.aux_code
+    Gender.aux_codes
+
+If you want to create all of these classes at once, as constants:
+
+    AuxCode.create_classes!

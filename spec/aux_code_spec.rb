@@ -117,6 +117,7 @@ describe AuxCode do
   end
 
   it 'should be able to get a Class for each category' do
+    random_category = AuxCode.create! :name => 'random-category-name'
     foo_category = AuxCode.create! :name => 'foo'
     foo_class = foo_category.aux_code_class
     foo_class.count.should == 0
@@ -149,6 +150,21 @@ describe AuxCode do
 
     foo_class.all.should include(foo)
     foo_class.all.should_not include(foo_category)
+
+    foo_class.find_by_name( 'neat' ).should be_nil
+    foo_class.find_or_create_by_name( 'neat' ).should_not be_nil
+    foo_class.find_by_name( 'neat' ).should_not be_nil
+    foo_class.code_names.should include('neat')
+  end
+
+  it 'should create good class names from category names for #create_classes!' do
+    AuxCode.new( :name => 'foos' ).class_name.should == 'Foo'
+    AuxCode.new( :name => 'foo Bars' ).class_name.should == 'FooBar'
+    AuxCode.new( :name => 'foo Bar lar Tars' ).class_name.should == 'FooBarLarTar'
+    AuxCode.new( :name => 'foo_Bar lar-Tars' ).class_name.should == 'FooBarLarTar'
+    AuxCode.new( :name => 'foo_Bar0lar1Tar5s' ).class_name.should == 'FooBarLarTar'
+    AuxCode.new( :name => 'Dog' ).class_name.should == 'Dog'
+    AuxCode.new( :name => 'Dogs' ).class_name.should == 'Dog'
   end
 
 end

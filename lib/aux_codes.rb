@@ -41,23 +41,45 @@ class AuxCode < ActiveRecord::Base
     aux_code_id == 0
   end
 
+  def class_name
+    name.gsub(/[^[:alpha:]]/,'_').titleize.gsub(' ','').singularize
+  end
+
   def aux_code_class
     klass = Class.new(AuxCode) do
       class << self
-        attr_accessor :aux_code_id
+        attr_accessor :aux_code_id, :aux_code
+
+        def aux_code
+          # @aux_code ||= AuxCode.find aux_code_id
+          AuxCode.find aux_code_id
+        end
 
         def count_with_aux_code_scope options = {}
           with_scope(:find => { :conditions => ['aux_code_id = ?', self.aux_code_id] }) do
             count_without_aux_code_scope options
           end
         end
-        def method_missing_with_aux_code_scope name, *args
+        def method_missing_with_aux_code_scope name, *args, &block
           if name.to_s[/^find/]
-            with_scope(:find => { :conditions => ['aux_code_id = ?', self.aux_code_id] }) do
-              method_missing_without_aux_code_scope name, *args
+            if name.to_s[/or_create_by_/]
+              name = "#{name}_and_aux_code_id".to_sym
+              args << self.aux_code_id
+              # method_missing_without_aux_code_scope name, *args
+              AuxCode.send name, *args, &block
+            else
+              with_scope(:find => { :conditions => ['aux_code_id = ?', self.aux_code_id] }) do
+                method_missing_without_aux_code_scope name, *args, &block
+              end
             end
           else
-            method_missing_without_aux_code_scope name, *args
+            method_missing_without_aux_code_scope name, *args, &block
+          end
+        rescue NoMethodError => ex
+          begin
+            aux_code.send name, *args, &block # try on the AuxCode instance for this class ...
+          rescue
+            raise ex
           end
         end
         def find_with_aux_code_scope first_or_all, options = {}
@@ -111,6 +133,12 @@ class AuxCode < ActiveRecord::Base
 
     def category_code_names category_object_or_id_or_name
       category( category_object_or_id_or_name ).code_names
+    end
+
+    def create_classes!
+      AuxCode.categories.each do |category|
+        Kernel::const_set category.class_name, category.aux_code_class
+      end
     end
   end
 

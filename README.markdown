@@ -80,4 +80,10 @@ Or with an Indifferent Hash-like syntax
     Breed.golden_retriever
     AuxCodes.breeds.golden_retriever
 
-**TODO** custom fields ... eg. Breed#acronym, Breed#description, Breed#kennel_association_id ...
+**TODO**
+ * custom fields, eg:
+   * Breed#acronym
+   * Breed#description
+   * Breed#kennel_association_id ...
+   * these need an easy way to be defined!  alias\_attribute?
+   * this needs to work in development mode, when the models are constantly being reloaded!

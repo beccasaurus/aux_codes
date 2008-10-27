@@ -82,8 +82,10 @@ Or with an Indifferent Hash-like syntax
 
 **TODO**
  * custom fields, eg:
-   * Breed#acronym
-   * Breed#description
-   * Breed#kennel_association_id ...
-   * these need an easy way to be defined!  alias\_attribute?
+   * `Breed#acronym`
+   * `Breed#description`
+   * `Breed#kennel_association_id` ...
+   * these need an easy way to be defined!  `alias_attribute`?
    * this needs to work in development mode, when the models are constantly being reloaded!
+   * you shouldn't have to know the name of the special field to use it ... something like `attr_string :name` could just grab the (first) string column!
+ * create (or update) method(s) for helping with the original AuxCode migration and for creating the special additional fields

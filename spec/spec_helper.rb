@@ -1,3 +1,4 @@
+gem 'activerecord', '= 2.1.1' # looks like active_connections is gone in 2.2.2 ?
 require File.dirname(__FILE__) + '/../lib/aux_codes'
 require 'spec'
 

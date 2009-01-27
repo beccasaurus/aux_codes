@@ -366,6 +366,13 @@ describe AuxCode do
     AuxCode.snack_foods[:popcorn].name.should == 'Popcorn'
   end
 
+  it 'should be able to update meta attribute easily' do
+    AuxCode.load_file File.dirname(__FILE__) + '/more_example_aux_codes.yml'
+    AuxCode.foods.pizza.taste.should == 'good'
+    AuxCode.foods.pizza.taste = 'yummy'
+    AuxCode.foods.pizza.taste.should == 'yummy'
+  end
+
   it 'should be able to load AuxCodes from a [slightly different] Yaml file' do
     AuxCode.count.should == 0
 
@@ -381,6 +388,15 @@ describe AuxCode do
     AuxCode.category('Snack Foods').codes.length.should == 2
     AuxCode.snack_foods.code_names.should include('Popcorn')
     AuxCode.snack_foods[:popcorn].name.should == 'Popcorn'
+
+    # quick test - overridable ...
+
+    #AuxCode.load({
+    #  :colors => { 
+    #    :red => { :first_letter => 'CHANGED' } 
+    #  }
+    #})
+    #AuxCode[:colors][:red].first_letter.should == 'CHANGED'
   end
 
 end

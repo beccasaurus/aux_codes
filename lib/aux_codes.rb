@@ -80,10 +80,15 @@ class AuxCode < ActiveRecord::Base
     method_missing_without_indifferent_hash_style_values name, *args, &block
   rescue NoMethodError => ex
     begin
-      code = self[name]
-      code = self.get_meta_attribute(name) unless code
-      raise ex unless code
-      return code
+      if name.to_s[/=$/]
+        self.set_meta_attribute(name.to_s.sub(/=$/,''), args.first) # we said `code.foo= X` so we should set the foo meta attribute to X
+        save
+      else
+        code = self[name]
+        code = self.get_meta_attribute(name) unless code
+        raise ex unless code
+        return code
+      end
     rescue
       raise ex
     end
@@ -191,7 +196,13 @@ class AuxCode < ActiveRecord::Base
             # we have a name and values
           else
             if values.is_a? Hash and (name.is_a? String or name.is_a? Symbol) # we have a Hash, likely with the create options ... we'll merge the name in as :name and create
-              category.create values.merge({ :name => name.to_s })
+              code = category[ name.to_s ]
+              if code
+                code.update_attributes values
+                puts "code.update_attributes #{ values.inspect }"
+              else
+                code = category.create values.merge({ :name => name.to_s })
+              end
 
             else
               raise "not sure how to create code in category #{ category.name } with: #{ name.inspect }, #{ values.inspect }"

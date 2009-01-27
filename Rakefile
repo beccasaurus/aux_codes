@@ -35,4 +35,20 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+desc 'Confirm that gemspec is $SAFE'
+task :safe do
+  require 'yaml'
+  require 'rubygems/specification'
+  data = File.read('aux_codes.gemspec')
+  spec = nil
+  if data !~ %r{!ruby/object:Gem::Specification}
+    Thread.new { spec = eval("$SAFE = 3\n#{data}") }.join
+  else
+    spec = YAML.load(data)
+  end
+  spec.validate
+  puts spec
+  puts "OK"
+end
+
 task :default => :spec

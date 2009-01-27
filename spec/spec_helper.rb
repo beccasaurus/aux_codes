@@ -1,4 +1,3 @@
-gem 'activerecord', '= 2.1.1' # looks like active_connections is gone in 2.2.2 ?
 require File.dirname(__FILE__) + '/../lib/aux_codes'
 require 'spec'
 
@@ -9,17 +8,20 @@ CreateAuxCodes.migrate :up
 # use transactions
 AuxCode; # hit one of the AR classes
 Spec::Runner.configure do |config|
-  config.before(:each) do
-    ActiveRecord::Base.active_connections.values.uniq.each do |conn|
-      Thread.current['open_transactions'] ||= 0
-      Thread.current['open_transactions'] += 1
-      conn.begin_db_transaction
-    end
+
+  def begin_transaction
+    Thread.current['open_transactions'] ||= 1
+    ActiveRecord::Base.connection.begin_db_transaction
   end
-  config.after(:each) do
-    ActiveRecord::Base.active_connections.values.uniq.each do |conn|                  
-      conn.rollback_db_transaction
+
+  def rollback_transaction
+    if Thread.current['open_transactions'] != 0
+      ActiveRecord::Base.connection.rollback_db_transaction
       Thread.current['open_transactions'] = 0
     end
   end
+
+  config.before(:each) { begin_transaction }
+  config.after(:each) { rollback_transaction }
+
 end

@@ -80,7 +80,9 @@ Or with an Indifferent Hash-like syntax
     Breed.golden_retriever
     AuxCodes.breeds.golden_retriever
 
-**TODO**
+TODO
+----
+
  * custom fields, eg:
    * `Breed#acronym`
    * `Breed#description`
@@ -89,3 +91,8 @@ Or with an Indifferent Hash-like syntax
    * this needs to work in development mode, when the models are constantly being reloaded!
    * you shouldn't have to know the name of the special field to use it ... something like `attr_string :name` could just grab the (first) string column!
  * create (or update) method(s) for helping with the original AuxCode migration and for creating the special additional fields
+
+NOTES
+-----
+
+this implementation is for ActiveRecord only!  i hope to eventually make a similar DataMapper implementation

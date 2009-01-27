@@ -237,13 +237,16 @@ describe AuxCode do
     breed.find_by_name('American Pit Bull Terrier').acronym.should == 'APBT'
   end
 
-  it 'should be able to define multiple meta attributes'
+  it 'should be able to define multiple meta attributes' do
+    breed = AuxCode.create!( :name => 'breed' ).aux_code_class do
+      attr_meta :acronym, :foo
+    end
 
-  it 'should not be able to define a meta attribute of not configured'
-
-  it 'should be able to define a strongly typed attribute'
-
-  it 'should not be able to define a strongly typed attribute of not configured'
+    apbt = breed.create :name => 'American Pit Bull Terrier', :acronym => 'APBT', :foo => 'bar'
+    breed.find_by_name('American Pit Bull Terrier').should == apbt
+    breed.find_by_name('American Pit Bull Terrier').acronym.should == 'APBT'
+    breed.find_by_name('American Pit Bull Terrier').foo.should == 'bar'
+  end
 
   it 'to_s should return the name of an aux_code' do
     AuxCode.new( :name => 'i Am the Name' ).to_s.should == 'i Am the Name'

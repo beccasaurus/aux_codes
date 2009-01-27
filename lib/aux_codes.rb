@@ -198,8 +198,9 @@ class AuxCode < ActiveRecord::Base
             if values.is_a? Hash and (name.is_a? String or name.is_a? Symbol) # we have a Hash, likely with the create options ... we'll merge the name in as :name and create
               code = category[ name.to_s ]
               if code
-                code.update_attributes values
-                puts "code.update_attributes #{ values.inspect }"
+                values.each do |attribute, new_value|
+                  code.send "#{attribute}=", new_value # update values
+                end
               else
                 code = category.create values.merge({ :name => name.to_s })
               end

@@ -391,12 +391,12 @@ describe AuxCode do
 
     # quick test - overridable ...
 
-    #AuxCode.load({
-    #  :colors => { 
-    #    :red => { :first_letter => 'CHANGED' } 
-    #  }
-    #})
-    #AuxCode[:colors][:red].first_letter.should == 'CHANGED'
+    AuxCode.load({
+      :colors => { 
+        :red => { :first_letter => 'CHANGED' } 
+      }
+    })
+    AuxCode[:colors][:red].first_letter.should == 'CHANGED'
   end
 
 end

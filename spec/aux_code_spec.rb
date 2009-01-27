@@ -203,14 +203,28 @@ describe AuxCode do
   end
 
   it 'an aux_code_class should raise a NoMethodError, as per usual, if an undefined method is called' do
-    #chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class
-    #puts "bacon => #{ chunky.new.bacon.inspect }"
-    #lambda { chunky.new.bacon }.should raise_error(NoMethodError)
+    chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class
+    lambda { chunky.new.bacon }.should raise_error(NoMethodError)
   end
 
   it 'should be able to pass a block to aux_code_class for quick and easy class customization' do
-    #chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class
-    #lambda { chunky.new.bacon }.should raise_error(NoMethodError)
+    chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class do
+      def bacon
+        "chunky bacon!"
+      end
+    end
+    lambda { chunky.new.bacon }.should_not raise_error(NoMethodError)
+    chunky.new.bacon.should == 'chunky bacon!'
+  end
+
+  it 'should be able to pass a block to aux_code_class for quick and easy eigenclass customization' do
+    chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class do
+      def self.bacon
+        "chunky bacon!"
+      end
+    end
+    chunky.bacon.should == 'chunky bacon!'
+    lambda { chunky.new.bacon }.should raise_error(NoMethodError) # bacon is a class method
   end
 
   it 'should be able to define a meta attribute'
@@ -220,7 +234,5 @@ describe AuxCode do
   it 'should be able to define a strongly typed attribute'
 
   it 'should not be able to define a strongly typed attribute of not configured'
-
-
 
 end

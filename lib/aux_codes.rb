@@ -44,11 +44,22 @@ class AuxCode < ActiveRecord::Base
     end
   end
 
+  # this allows us to say things like:
+  #
+  #   foo = AuxCode.create :name => 'foo'
+  #   foo.codes.create :name => 'bar'
+  #
+  #   foo.bar # should return the bar aux code under the foo category
+  #
+  #   if bar doesn't exist, we throw a normal NoMethodError
+  #
   def method_missing_with_indifferent_hash_style_values name, *args, &block
     method_missing_without_indifferent_hash_style_values name, *args, &block
   rescue NoMethodError => ex
     begin
-      self[name]
+      code = self[name]
+      raise ex unless code
+      return code
     rescue
       raise ex
     end
@@ -89,6 +100,12 @@ class AuxCode < ActiveRecord::Base
       end
     end
 
+    # this allows us to say things like:
+    #
+    #   AuxCode.create :name => 'foo'
+    #
+    #   AuxCode.foo # should return the foo category aux code
+    #
     def method_missing_with_indifferent_hash_style_values name, *args, &block
       unless self.respond_to?:aux_code_id # in which case, this is a *derived* class, not AuxCode
         begin

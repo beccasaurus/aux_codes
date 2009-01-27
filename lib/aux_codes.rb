@@ -44,6 +44,23 @@ class AuxCode < ActiveRecord::Base
     end
   end
 
+  def deserialized_meta_hash
+    require 'yaml'
+    self.meta ||= ""
+    YAML::load(self.meta) || { }
+  end
+
+  def get_meta_attribute meta_attribute
+    deserialized_meta_hash[meta_attribute.to_s]
+  end
+
+  def set_meta_attribute meta_attribute, value
+    require 'yaml'
+    meta_hash = deserialized_meta_hash
+    meta_hash[meta_attribute.to_s] = value
+    self.meta = meta_hash.to_yaml
+  end
+
   # this allows us to say things like:
   #
   #   foo = AuxCode.create :name => 'foo'
@@ -53,11 +70,14 @@ class AuxCode < ActiveRecord::Base
   #
   #   if bar doesn't exist, we throw a normal NoMethodError
   #
+  #   this should check meta_attributes on the object too
+  #
   def method_missing_with_indifferent_hash_style_values name, *args, &block
     method_missing_without_indifferent_hash_style_values name, *args, &block
   rescue NoMethodError => ex
     begin
       code = self[name]
+      code = self.get_meta_attribute(name) unless code
       raise ex unless code
       return code
     rescue
@@ -78,7 +98,6 @@ class AuxCode < ActiveRecord::Base
     end
 
     def category category_object_or_id_or_name
-      puts "category #{ category_object_or_id_or_name }"
       obj = category_object_or_id_or_name
       return obj if obj.is_a?AuxCode
       return AuxCode.find(obj) if obj.is_a?Fixnum
@@ -159,10 +178,7 @@ class AuxCode < ActiveRecord::Base
             # we have a name and values
           else
             if values.is_a? Hash and (name.is_a? String or name.is_a? Symbol) # we have a Hash, likely with the create options ... we'll merge the name in as :name and create
-              v = values.merge({ :name => name.to_s })
-              puts "category.meta_attributes => #{ category.meta_attributes.inspect }"
-              puts "category.create #{v.inspect}"
-              category.create v
+              category.create values.merge({ :name => name.to_s })
 
             else
               raise "not sure how to create code in category #{ category.name } with: #{ name.inspect }, #{ values.inspect }"

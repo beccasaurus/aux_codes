@@ -6,23 +6,6 @@ class AuxCode
   def aux_code_class &block
     klass = Class.new(AuxCode) do
 
-      def deserialized_meta_hash
-        require 'yaml'
-        self.meta ||= ""
-        YAML::load(self.meta) || { }
-      end
-
-      def get_meta_attribute meta_attribute
-        deserialized_meta_hash[meta_attribute]
-      end
-
-      def set_meta_attribute meta_attribute, value
-        require 'yaml'
-        meta_hash = deserialized_meta_hash
-        meta_hash[meta_attribute] = value
-        self.meta = meta_hash.to_yaml
-      end
-
       class << self
 
         attr_accessor :aux_code_id, :aux_code
@@ -132,8 +115,7 @@ class AuxCode
     klass.class_eval {
 
       def self.reload_meta_attributes!
-        puts "reloading meta attributes"
-
+        puts "reloading meta attributes! => #{ self.meta_attributes.inspect }"
         self.meta_attributes ||= []
 
         self.meta_attributes.each do |meta_attribute|

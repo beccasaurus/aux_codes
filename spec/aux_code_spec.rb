@@ -283,10 +283,10 @@ describe AuxCode do
     AuxCode[:days][:monday].name.should == 'Monday'
 
     AuxCode[:colors][:red].name.should == 'red'
-    #AuxCode[:colors][:red].first_letter.should == 'r'
+    AuxCode[:colors][:red].first_letter.should == 'r'
 
-    #AuxCode.foods.pizza.taste.should == 'good'
-    #AuxCode.foods.dirt.taste.should == 'bad'
+    AuxCode.foods.pizza.taste.should == 'good'
+    AuxCode.foods.dirt.taste.should == 'bad'
 
     AuxCode['Snack Foods'].codes.length.should == 2
     AuxCode.category('Snack Foods').codes.length.should == 2

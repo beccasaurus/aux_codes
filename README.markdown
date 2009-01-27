@@ -96,6 +96,7 @@ TODO
  - create (or update) method(s) for helping with the original AuxCode migration and for creating the special additional fields
  - make table name and column names configurable (but with strong defaults)
  - should have a rails generator ... should be 1 command to setup `aux_codes` in Rails
+ - after i add a rails generator, i'll bump to 1.1.0 and release
 
 NOTES
 -----

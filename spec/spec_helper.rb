@@ -8,20 +8,14 @@ CreateAuxCodes.migrate :up
 # use transactions
 AuxCode; # hit one of the AR classes
 Spec::Runner.configure do |config|
-
-  def begin_transaction
-    Thread.current['open_transactions'] ||= 1
+  config.before(:each) do
+    ActiveRecord::Base.connection.increment_open_transactions
     ActiveRecord::Base.connection.begin_db_transaction
   end
-
-  def rollback_transaction
-    if Thread.current['open_transactions'] != 0
+  config.after(:each) do
+    if ActiveRecord::Base.connection.open_transactions != 0
       ActiveRecord::Base.connection.rollback_db_transaction
-      Thread.current['open_transactions'] = 0
+      ActiveRecord::Base.connection.decrement_open_transactions
     end
   end
-
-  config.before(:each) { begin_transaction }
-  config.after(:each) { rollback_transaction }
-
 end

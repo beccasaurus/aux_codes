@@ -285,6 +285,10 @@ describe AuxCode do
     AuxCode[:colors][:red].name.should == 'red'
     AuxCode[:colors][:red].first_letter.should == 'r'
 
+    AuxCode[:colors].aux_code_class.red.name.should == 'red'
+    AuxCode[:colors].aux_code_class.red.first_letter.should == 'r'
+    AuxCode[:colors].aux_code_class[:red].first_letter.should == 'r'
+
     AuxCode.foods.pizza.taste.should == 'good'
     AuxCode.foods.dirt.taste.should == 'bad'
 

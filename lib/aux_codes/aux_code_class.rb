@@ -15,6 +15,10 @@ class AuxCode
           AuxCode.find aux_code_id
         end
 
+        def [] code
+          aux_code[code]
+        end
+
         #
         # this handles typical ActiveRecord::Base method_missing features, eg: aux_code.find_by_name 'foo'
         #

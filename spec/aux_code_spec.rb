@@ -227,7 +227,17 @@ describe AuxCode do
     lambda { chunky.new.bacon }.should raise_error(NoMethodError) # bacon is a class method
   end
 
-  it 'should be able to define a meta attribute'
+  it 'should be able to define a meta attribute' do
+    breed = AuxCode.create!( :name => 'breed' ).aux_code_class do
+      attr_meta :acronym
+    end
+
+    apbt = breed.create :name => 'American Pit Bull Terrier', :acronym => 'APBT'
+    breed.find_by_name('American Pit Bull Terrier').should == apbt
+    breed.find_by_name('American Pit Bull Terrier').acronym.should == 'APBT'
+  end
+
+  it 'should be able to define multiple meta attributes'
 
   it 'should not be able to define a meta attribute of not configured'
 

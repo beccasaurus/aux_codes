@@ -7,7 +7,7 @@ class AuxCode
     klass = Class.new(AuxCode) do
       class << self
 
-        attr_accessor :aux_code_id, :aux_code
+        attr_accessor :aux_code_id, :aux_code, :meta_attribute_values
 
         def aux_code
           # @aux_code ||= AuxCode.find aux_code_id
@@ -76,7 +76,47 @@ class AuxCode
     end
 
     klass.aux_code_id = self.id # the class needs to know its own aux_code_id
+
+    # 
+    # add custom attributes
+    #
+    klass.class.class_eval do
+
+      # an array of valid meta attribute names
+      attr_accessor :meta_attributes
+
+      def attr_meta *attribute_names
+        puts "attr_meta #{ attribute_names.inspect }"
+        @meta_attributes ||= []
+        @meta_attributes += attribute_names.map {|attribute_name| attribute_name.to_s }
+        puts "@meta_attributes => #{ @meta_attributes.inspect }"
+        @meta_attributes
+      end
+    end
+
+    # class customizations (if block passed in)
     klass.class_eval(&block) if block
+    
+    # for each of the meta_attributes defined, create getter and setter methods
+    #
+    # CAUTION: the way we're currently doing this, this'll only work if attr_meta 
+    #          is set when you initially get the aux_code_class ... adding 
+    #          meta attributes later won't currently work!
+    #
+    klass.class_eval {
+      self.meta_attributes ||= []
+
+      self.meta_attributes.each do |meta_attribute|
+        define_method(meta_attribute) do
+          instance_variable_get "@#{meta_attribute}"
+        end
+        define_method("#{meta_attribute}=") do |value|
+          instance_variable_set "@#{meta_attribute}", value
+          instance_variable_get "@#{meta_attribute}"
+        end
+      end
+    }
+
     klass
   end
 

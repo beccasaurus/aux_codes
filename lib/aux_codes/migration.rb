@@ -14,6 +14,9 @@ class CreateAuxCodes < ActiveRecord::Migration
       # %w( integer decimal string text boolean datetime ).each do |field_type|
       #   t.column field_type.to_sym, "#{field_type}_field"
       # end
+      
+      # this should be added conditionally, based on whether or not meta attributes are desired
+      t.text :meta, :comment => 'Serialized meta_attributes'
 
       t.timestamps
     end

@@ -5,9 +5,27 @@ class AuxCode
 
   def aux_code_class &block
     klass = Class.new(AuxCode) do
+
+      def deserialized_meta_hash
+        require 'yaml'
+        self.meta ||= ""
+        YAML::load(self.meta) || { }
+      end
+
+      def get_meta_attribute meta_attribute
+        deserialized_meta_hash[meta_attribute]
+      end
+
+      def set_meta_attribute meta_attribute, value
+        require 'yaml'
+        meta_hash = deserialized_meta_hash
+        meta_hash[meta_attribute] = value
+        self.meta = meta_hash.to_yaml
+      end
+
       class << self
 
-        attr_accessor :aux_code_id, :aux_code, :meta_attribute_values
+        attr_accessor :aux_code_id, :aux_code
 
         def aux_code
           # @aux_code ||= AuxCode.find aux_code_id
@@ -86,10 +104,8 @@ class AuxCode
       attr_accessor :meta_attributes
 
       def attr_meta *attribute_names
-        puts "attr_meta #{ attribute_names.inspect }"
         @meta_attributes ||= []
         @meta_attributes += attribute_names.map {|attribute_name| attribute_name.to_s }
-        puts "@meta_attributes => #{ @meta_attributes.inspect }"
         @meta_attributes
       end
     end
@@ -108,11 +124,10 @@ class AuxCode
 
       self.meta_attributes.each do |meta_attribute|
         define_method(meta_attribute) do
-          instance_variable_get "@#{meta_attribute}"
+          get_meta_attribute(meta_attribute)
         end
         define_method("#{meta_attribute}=") do |value|
-          instance_variable_set "@#{meta_attribute}", value
-          instance_variable_get "@#{meta_attribute}"
+          set_meta_attribute(meta_attribute, value)
         end
       end
     }

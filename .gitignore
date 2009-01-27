@@ -1,4 +1,6 @@
 *.sw?
 
+doc
 tmp
+rdoc
 coverage

@@ -245,7 +245,14 @@ describe AuxCode do
 
   it 'should not be able to define a strongly typed attribute of not configured'
 
-  it 'to_s should return the name of an aux_code'
+  it 'to_s should return the name of an aux_code' do
+    AuxCode.new( :name => 'i Am the Name' ).to_s.should == 'i Am the Name'
+
+    x = AuxCode.create :name => 'foo'
+    y = x.codes.create :name => 'bar'
+    x.to_s.should == 'foo'
+    y.to_s.should == 'bar'
+  end
     
   it 'should be able to load AuxCodes from a Hash' do
     AuxCode.count.should == 0
@@ -302,8 +309,78 @@ describe AuxCode do
 
   end
 
-  it 'should be able to load AuxCodes from a Yaml string'
+  it 'should be able to load AuxCodes from a Yaml string' do
+    require 'yaml'
+    AuxCode.count.should == 0
+    yaml = {
+      
+      # symbol => String Array
+      :days => %w( Monday Tuesday Wednesday ),
+
+      # symbol => Hash
+      :colors => {
+        
+        # symbol => Hash options
+        :red  => { :first_letter => 'r' },
+        :blue => { :first_letter => 'b' }
+
+      },
+
+      # symbol => Array of hashes
+      :foods => [
+        { :name => 'Pizza', :taste => 'good' },
+        { :name => 'Dirt', :taste => 'bad' }
+      ],
+
+      'Snack Foods' => %w( Popcorn chips )
+
+    }.to_yaml
+    AuxCode.load_yaml yaml
+
+    AuxCode.category_names.should include('days')
+    AuxCode[:days].code_names.should include('Monday')
+    AuxCode[:days][:monday].name.should == 'Monday'
+    AuxCode[:colors][:red].name.should == 'red'
+    AuxCode[:colors][:red].first_letter.should == 'r'
+    AuxCode[:colors].aux_code_class.red.first_letter.should == 'r'
+    AuxCode.foods.pizza.taste.should == 'good'
+    AuxCode.category('Snack Foods').codes.length.should == 2
+    AuxCode.snack_foods.code_names.should include('Popcorn')
+    AuxCode.snack_foods[:popcorn].name.should == 'Popcorn'
+  end
   
-  it 'should be able to load AuxCodes from a Yaml file'
+  it 'should be able to load AuxCodes from a Yaml file' do
+    AuxCode.count.should == 0
+
+    AuxCode.load_file File.dirname(__FILE__) + '/example_aux_codes.yml'
+
+    AuxCode.category_names.should include('days')
+    AuxCode[:days].code_names.should include('Monday')
+    AuxCode[:days][:monday].name.should == 'Monday'
+    AuxCode[:colors][:red].name.should == 'red'
+    AuxCode[:colors][:red].first_letter.should == 'r'
+    AuxCode[:colors].aux_code_class.red.first_letter.should == 'r'
+    AuxCode.foods.pizza.taste.should == 'good'
+    AuxCode.category('Snack Foods').codes.length.should == 2
+    AuxCode.snack_foods.code_names.should include('Popcorn')
+    AuxCode.snack_foods[:popcorn].name.should == 'Popcorn'
+  end
+
+  it 'should be able to load AuxCodes from a [slightly different] Yaml file' do
+    AuxCode.count.should == 0
+
+    AuxCode.load_file File.dirname(__FILE__) + '/more_example_aux_codes.yml'
+
+    AuxCode.category_names.should include('days')
+    AuxCode[:days].code_names.should include('Monday')
+    AuxCode[:days][:monday].name.should == 'Monday'
+    AuxCode[:colors][:red].name.should == 'red'
+    AuxCode[:colors][:red].first_letter.should == 'r'
+    AuxCode[:colors].aux_code_class.red.first_letter.should == 'r'
+    AuxCode.foods.pizza.taste.should == 'good'
+    AuxCode.category('Snack Foods').codes.length.should == 2
+    AuxCode.snack_foods.code_names.should include('Popcorn')
+    AuxCode.snack_foods[:popcorn].name.should == 'Popcorn'
+  end
 
 end

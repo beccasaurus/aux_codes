@@ -31,6 +31,10 @@ class AuxCode < ActiveRecord::Base
     name.gsub(/[^[:alpha:]]/,'_').titleize.gsub(' ','').singularize
   end
 
+  def to_s
+    name
+  end
+
   def [] attribute_or_code_name
     if attributes.include?attribute_or_code_name
       attributes[attribute_or_code_name]
@@ -151,6 +155,15 @@ class AuxCode < ActiveRecord::Base
       end
     end
     alias_method_chain :method_missing, :indifferent_hash_style_values
+
+    def load_yaml yaml_string
+      require 'yaml'
+      self.load YAML::load(yaml_string)
+    end
+
+    def load_file serialized_yaml_file_path
+      load_yaml File.read(serialized_yaml_file_path)
+    end
 
     # 
     # loads AuxCodes (creates them) from a Hash, keyed on the name of the aux code categories to create

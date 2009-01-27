@@ -119,7 +119,6 @@ class AuxCode
     klass.class_eval {
 
       def self.reload_meta_attributes!
-        puts "reloading meta attributes! => #{ self.meta_attributes.inspect }"
         self.meta_attributes ||= []
 
         self.meta_attributes.each do |meta_attribute|

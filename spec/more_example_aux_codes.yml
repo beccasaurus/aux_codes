@@ -1,0 +1,22 @@
+# cleaned up a bit ... shows different ways you can create the yaml for your aux codes
+
+foods:
+  Pizza:
+    taste: good
+  Dirt:
+    taste: bad
+
+Snack Foods:
+- Popcorn
+- chips
+
+days:
+  Monday:
+  Tuesday:
+  Wednesday:
+
+colors: 
+  red: 
+    first_letter: r
+  blue: 
+    first_letter: b

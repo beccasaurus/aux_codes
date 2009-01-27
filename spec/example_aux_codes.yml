@@ -1,0 +1,18 @@
+--- 
+:foods: 
+- :taste: good
+  :name: Pizza
+- :taste: bad
+  :name: Dirt
+:colors: 
+  :red: 
+    :first_letter: r
+  :blue: 
+    :first_letter: b
+Snack Foods: 
+- Popcorn
+- chips
+:days: 
+- Monday
+- Tuesday
+- Wednesday

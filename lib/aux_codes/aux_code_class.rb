@@ -86,7 +86,17 @@ class AuxCode
         alias_method_chain :create!, :aux_code_scope
         
         def new_with_aux_code_scope options = {}
-          new_without_aux_code_scope options.merge({ :aux_code_id => self.aux_code_id })
+          begin
+            new_without_aux_code_scope options.merge({ :aux_code_id => self.aux_code_id })
+          rescue ActiveRecord::UnknownAttributeError => ex
+
+            # we were likely passed some unknown meta attributes ... define them ...
+            meta_attribute_name = /unknown attribute: (.*)/.match(ex.message).captures.first
+            meta_attributes << meta_attribute_name
+            self.reload_meta_attributes!
+            new_with_aux_code_scope options # re-call ... WARNING ... might end up in infinite loop!
+
+          end
         end
         alias_method_chain :new, :aux_code_scope
 
@@ -120,17 +130,34 @@ class AuxCode
     #          meta attributes later won't currently work!
     #
     klass.class_eval {
-      self.meta_attributes ||= []
 
-      self.meta_attributes.each do |meta_attribute|
-        define_method(meta_attribute) do
-          get_meta_attribute(meta_attribute)
-        end
-        define_method("#{meta_attribute}=") do |value|
-          set_meta_attribute(meta_attribute, value)
+      def self.reload_meta_attributes!
+        puts "reloading meta attributes"
+
+        self.meta_attributes ||= []
+
+        self.meta_attributes.each do |meta_attribute|
+          
+          unless self.respond_to? meta_attribute
+            define_method(meta_attribute) do
+              get_meta_attribute(meta_attribute)
+            end
+          end
+
+          unless self.respond_to? "#{meta_attribute}="
+            define_method("#{meta_attribute}=") do |value|
+              set_meta_attribute(meta_attribute, value)
+            end
+          end
+
         end
       end
+
+      reload_meta_attributes!
+
     }
+
+    # wow, need to clean this up ...
 
     klass
   end

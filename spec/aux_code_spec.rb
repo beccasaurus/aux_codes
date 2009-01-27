@@ -245,4 +245,61 @@ describe AuxCode do
 
   it 'should not be able to define a strongly typed attribute of not configured'
 
+  it 'to_s should return the name of an aux_code'
+    
+  it 'should be able to load AuxCodes from a Hash' do
+    AuxCode.count.should == 0
+    AuxCode.load({
+      
+      # symbol => String Array
+      :days => %w( Monday Tuesday Wednesday ),
+
+      # symbol => Hash
+      :colors => {
+        
+        # symbol => Hash options
+        :red  => { :first_letter => 'r' },
+        :blue => { :first_letter => 'b' }
+
+      },
+
+      # symbol => Array of hashes
+      :foods => [
+        { :name => 'Pizza', :taste => 'good' },
+        { :name => 'Dirt', :taste => 'bad' }
+      ],
+
+      'Snack Foods' => %w( Popcorn chips )
+
+    })
+
+    AuxCode.category_names.should include('days')
+    AuxCode.category_names.should include('colors')
+    AuxCode.category_names.should include('foods')
+
+    AuxCode[:days].codes.length.should == 3
+    AuxCode[:days].code_names.should include('Monday')
+    AuxCode[:days].monday.name.should == 'Monday'
+    AuxCode[:days][:monday].name.should == 'Monday'
+
+    AuxCode[:colors][:red].name.should == 'red'
+    #AuxCode[:colors][:red].first_letter.should == 'r'
+
+    #AuxCode.foods.pizza.taste.should == 'good'
+    #AuxCode.foods.dirt.taste.should == 'bad'
+
+    AuxCode['Snack Foods'].codes.length.should == 2
+    AuxCode.category('Snack Foods').codes.length.should == 2
+    AuxCode.snack_foods.codes.length.should == 2
+    AuxCode.snack_foods.code_names.should include('Popcorn')
+    AuxCode.snack_foods[:popcorn].name.should == 'Popcorn'
+    AuxCode[:snack_foods].popcorn.name.should == 'Popcorn'
+    AuxCode['Snack Foods'].popcorn.name.should == 'Popcorn'
+
+  end
+
+  it 'should be able to load AuxCodes from a Yaml string'
+  
+  it 'should be able to load AuxCodes from a Yaml file'
+
 end

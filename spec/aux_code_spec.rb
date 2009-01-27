@@ -202,4 +202,25 @@ describe AuxCode do
     foo_category[:yay_for_bacon].should == bacon
   end
 
+  it 'an aux_code_class should raise a NoMethodError, as per usual, if an undefined method is called' do
+    #chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class
+    #puts "bacon => #{ chunky.new.bacon.inspect }"
+    #lambda { chunky.new.bacon }.should raise_error(NoMethodError)
+  end
+
+  it 'should be able to pass a block to aux_code_class for quick and easy class customization' do
+    #chunky = AuxCode.create!( :name => 'chunky' ).aux_code_class
+    #lambda { chunky.new.bacon }.should raise_error(NoMethodError)
+  end
+
+  it 'should be able to define a meta attribute'
+
+  it 'should not be able to define a meta attribute of not configured'
+
+  it 'should be able to define a strongly typed attribute'
+
+  it 'should not be able to define a strongly typed attribute of not configured'
+
+
+
 end

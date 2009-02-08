@@ -194,6 +194,7 @@ class AuxCode < ActiveRecord::Base
     #       that'll work with `hash.each {|key,value| ... }`
     #
     def load hash
+      return unless hash.is_a?Hash
       hash.each do |category_name, codes|
         category = AuxCode.find_or_create_by_name( category_name.to_s ).aux_code_class
         codes.each do |name, values|

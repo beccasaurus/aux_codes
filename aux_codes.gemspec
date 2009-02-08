@@ -6,10 +6,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["remi"]
-  s.date = %q{2009-01-27}
+  s.date = %q{2009-02-08}
   s.description = %q{ActiveRecord plugin for easily managing lots of enumeration-type data}
   s.email = %q{remi@remitaylor.com}
-  s.files = ["VERSION.yml", "README.markdown", "lib/aux_codes", "lib/aux_codes/migration.rb", "lib/aux_codes.rb", "spec/aux_code_spec.rb", "spec/spec_helper.rb"]
+  s.files = ["Rakefile", "VERSION.yml", "README.markdown", "LICENSE", "lib/aux_codes", "lib/aux_codes/aux_code_class.rb", "lib/aux_codes/migration.rb", "lib/aux_codes.rb", "spec/more_example_aux_codes.yml", "spec/aux_code_spec.rb", "spec/spec_helper.rb", "spec/example_aux_codes.yml", "rails_generators/aux_codes", "rails_generators/aux_codes/aux_codes_generator.rb", "rails_generators/aux_codes/USAGE", "rails_generators/aux_codes/templates", "rails_generators/aux_codes/templates/aux_codes.yml", "rails_generators/aux_codes/templates/migration.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/remi/aux_codes}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]

@@ -1,5 +1,5 @@
 # This generator bootstraps aux_codes into a Rails application
-class AuxCodesSpecGenerator < Rails::Generator::Base
+class AuxCodesGenerator < Rails::Generator::Base
 
   def initialize(runtime_args, runtime_options = {})
     bootstrap
@@ -18,6 +18,15 @@ class AuxCodesSpecGenerator < Rails::Generator::Base
     end
   end
 
+  # checks to see whether or not there's already a create_aux_codes migration
+  def migration_exists?
+    db_dir         = File.join RAILS_ROOT, 'db'
+    migrations_dir = File.join db_dir, 'migrate'
+    return false unless File.directory? db_dir
+    return false unless File.directory? migrations_dir
+    return false if Dir[ File.join(migrations_dir, '*_create_aux_codes.rb') ].empty?
+  end
+
   # copy files into the project, our templates:
   #
   # templates/
@@ -26,12 +35,14 @@ class AuxCodesSpecGenerator < Rails::Generator::Base
   #
   def manifest
     record do |m|
-      timestamp = Time.now.strftime '%Y%m%d%H%M%S'
-
       m.directory 'config'
       m.file 'aux_codes.yml', 'config/aux_codes.yml'
-      m.directory 'db/migrate'
-      m.file 'migration.rb', "db/migrate/#{ timestamp }_create_aux_codes.rb"
+
+      unless migration_exists?
+        timestamp = Time.now.strftime '%Y%m%d%H%M%S'
+        m.directory 'db/migrate'
+        m.file 'migration.rb', "db/migrate/#{ timestamp }_create_aux_codes.rb"
+      end
     end
   end
  

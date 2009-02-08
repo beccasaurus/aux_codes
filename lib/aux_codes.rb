@@ -180,10 +180,12 @@ class AuxCode < ActiveRecord::Base
     # initialize AuxCodes ... looks for config/aux_codes.yml
     # and creates classes
     def init # should eventually take configuration options (hash || block)
-      aux_codes_yml = File.join 'config', 'aux_codes.yml'
-      if File.file? aux_codes_yml
-        load_file aux_codes_yml
-        create_classes!
+      if ActiveRecord::Base.connection.tables.include? 'aux_codes'
+        aux_codes_yml = File.join 'config', 'aux_codes.yml'
+        if File.file? aux_codes_yml
+          load_file aux_codes_yml
+          create_classes!
+        end
       end
     end
 

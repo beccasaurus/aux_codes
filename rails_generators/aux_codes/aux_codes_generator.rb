@@ -25,6 +25,7 @@ class AuxCodesGenerator < Rails::Generator::Base
     return false unless File.directory? db_dir
     return false unless File.directory? migrations_dir
     return false if Dir[ File.join(migrations_dir, '*_create_aux_codes.rb') ].empty?
+    return true
   end
 
   # copy files into the project, our templates:

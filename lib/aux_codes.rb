@@ -2,6 +2,13 @@ $:.unshift File.dirname(__FILE__)
 
 %w( rubygems activerecord aux_codes/migration ).each {|lib| require lib }
 
+# top-level class for AuxCodes
+#
+# used for namespacing and global configuration (once added)
+#
+class AuxCodes
+end
+
 #
 # the basic AuxCode ActiveRecord class
 #
@@ -170,6 +177,16 @@ class AuxCode < ActiveRecord::Base
       load_yaml File.read(serialized_yaml_file_path)
     end
 
+    # initialize AuxCodes ... looks for config/aux_codes.yml
+    # and creates classes
+    def init # should eventually take configuration options (hash || block)
+      aux_codes_yml = File.join 'config', 'aux_codes.yml'
+      if File.file? aux_codes_yml
+        load_file aux_codes_yml
+        create_classes!
+      end
+    end
+
     # 
     # loads AuxCodes (creates them) from a Hash, keyed on the name of the aux code categories to create
     #
@@ -184,7 +201,7 @@ class AuxCode < ActiveRecord::Base
           # only a name given
           if values.nil? or values.empty?
             if name.is_a? String or name.is_a? Symbol # we have a String || Symbol, it's likely the code's name, eg. :foo or 'bar'
-              category.create :name => name.to_s
+              category.create :name => name.to_s unless category.code_names.include?(name.to_s)
 
             elsif name.is_a? Hash # we have a Hash, likely with the create options, eg. { :name => 'hi', :foo =>'bar' }
               category.create name

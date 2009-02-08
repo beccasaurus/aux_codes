@@ -1,0 +1,26 @@
+#
+# define your aux_codes!
+#
+# commented out below are some examples of a few of
+# the different ways you can define your aux_codes!
+#
+### foods:
+###   Pizza:
+###     taste: good
+###   Dirt:
+###     taste: bad
+### 
+### Snack Foods:
+### - Popcorn
+### - chips
+### 
+### days:
+###   Monday:
+###   Tuesday:
+###   Wednesday:
+### 
+### colors: 
+###   red: 
+###     first_letter: r
+###   blue: 
+###     first_letter: b

@@ -1,0 +1,5 @@
+Description:
+    Bootstraps aux_codes into Rails application
+    
+Examples:
+    `./script/generate aux_codes`

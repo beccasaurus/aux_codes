@@ -12,6 +12,9 @@ begin
     s.homepage    = "http://github.com/remi/aux_codes"
     s.description = "ActiveRecord plugin for easily managing lots of enumeration-type data"
     s.authors     = %w( remi )
+    s.files       = FileList["[A-Z]*", "{lib,spec,examples,rails_generators}/**/*"] 
+    # s.executables = "neato" 
+    # s.add_dependency 'person-project' 
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"

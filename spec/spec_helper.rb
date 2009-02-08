@@ -2,8 +2,8 @@ require File.dirname(__FILE__) + '/../lib/aux_codes'
 require 'spec'
 
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ':memory:'
-CreateAuxCodes.verbose = false
-CreateAuxCodes.migrate :up
+AuxCodes::CreateAuxCodes.verbose = false
+AuxCodes::CreateAuxCodes.migrate :up
 
 # use transactions
 AuxCode; # hit one of the AR classes

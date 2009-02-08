@@ -89,7 +89,6 @@ TODO
  - convert this README to RDoc
  - make table name and column names configurable (but with strong defaults)
  - staticly typed fields?
- - easy to customize classes?
 
 NOTES
 -----

@@ -2,8 +2,8 @@
 require File.dirname(__FILE__) + '/lib/aux_codes'
 
 ActiveRecord::Base.establish_connection :adapter => 'sqlite3', :database => ':memory:'
-CreateAuxCodes.verbose = false
-CreateAuxCodes.migrate :up
+AuxCodes::CreateAuxCodes.verbose = false
+AuxCodes::CreateAuxCodes.migrate :up
 
 require 'irb'
 

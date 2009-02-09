@@ -89,6 +89,7 @@ TODO
  - convert this README to RDoc
  - make table name and column names configurable (but with strong defaults)
  - staticly typed fields?
+ - fix bug discovered while screencasting ... Gender.male returned the female code (because it includes 'male')
 
 NOTES
 -----

@@ -1,6 +1,8 @@
 aux codes
 =========
 
+*aux codes inspired by [Walter Turner][walt]*
+
 Getting Started
 ---------------
 
@@ -12,7 +14,7 @@ A good way to get started might be to checkout the screencasts
 Background
 ----------
 
-Way back when, when I was learning database development, a mentor of mine showed me 
+Way back when, when I was learning database development, a [mentor of mine][walt] showed me 
 a technique that he liked to use to consolidate similar enum-esque database tables.
 
 Often, applications have enum-esque tables that merely store simply key / value pairs, 
@@ -106,3 +108,6 @@ NOTES
 -----
 
 this implementation is for ActiveRecord only!  i hope to eventually make a similar DataMapper implementation
+
+
+[walt]:  http://www.corporatewebconsulting.net/menu/about_us/walt.php

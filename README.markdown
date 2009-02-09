@@ -1,6 +1,17 @@
 aux codes
 =========
 
+Getting Started
+---------------
+
+A good way to get started might be to checkout the screencast
+
+ - [Introducing AuxCodes](http://remi.org/2009/02/07/introducing-auxcodes.html)
+ - [AuxCodes on Rails](http://remi.org/2009/02/08/auxcodes-on-rails.html)
+
+Background
+----------
+
 Way back when, when I was learning database development, a mentor of mine showed me 
 a technique that he liked to use to consolidate similar enum-esque database tables.
 

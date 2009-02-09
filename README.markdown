@@ -4,7 +4,7 @@ aux codes
 Getting Started
 ---------------
 
-A good way to get started might be to checkout the screencast
+A good way to get started might be to checkout the screencasts
 
  - [Introducing AuxCodes](http://remi.org/2009/02/07/introducing-auxcodes.html)
  - [AuxCodes on Rails](http://remi.org/2009/02/08/auxcodes-on-rails.html)

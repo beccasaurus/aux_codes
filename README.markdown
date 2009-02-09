@@ -2,9 +2,9 @@ aux codes
 =========
 
 Way back when, when I was learning database development, a mentor of mine showed me 
-a technique that he liked to use to consolidate similar enumeration-esque database tables.
+a technique that he liked to use to consolidate similar enum-esque database tables.
 
-Often, applications have enumeration-esque tables that merely store simply key / value pairs, 
+Often, applications have enum-esque tables that merely store simply key / value pairs, 
 typically a unique ID and a string.  Take for instance, a `genders` table:
 
     [  genders   ]

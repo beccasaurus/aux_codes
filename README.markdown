@@ -11,6 +11,17 @@ A good way to get started might be to checkout the screencasts
  - [Introducing AuxCodes](http://remi.org/2009/02/07/introducing-auxcodes.html)
  - [AuxCodes on Rails](http://remi.org/2009/02/08/auxcodes-on-rails.html)
 
+Installation
+------------
+
+For the ActiveRecord version:
+
+    $ sudo gem install aux_codes
+
+For the DataMapper version:
+
+    $ sudo gem install dm-aux_codes
+
 Background
 ----------
 
@@ -103,11 +114,5 @@ TODO
  - make table name and column names configurable (but with strong defaults)
  - staticly typed fields?
  - fix bug discovered while screencasting ... Gender.male returned the female code (because it includes 'male')
-
-NOTES
------
-
-this implementation is for ActiveRecord only!  i hope to eventually make a similar DataMapper implementation
-
 
 [walt]:  http://www.corporatewebconsulting.net/menu/about_us/walt.php
